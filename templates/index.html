@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div class="container-fluid bg-dark text-white py-3 mb-4">
+        <div class="container">
+            <h1 class="h3 mb-0">
+                <i class="fas fa-server me-2"></i>
+                System Monitor
+                <small class="text-muted ms-3" id="last-update">Loading...</small>
+            </h1>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="container">
+        <!-- Metrics Cards -->
+        <div class="row g-3 mb-4">
+            <!-- CPU Usage -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card metric-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-microchip metric-icon text-primary"></i>
+                        <h5 class="card-title">CPU Usage</h5>
+                        <h2 class="metric-value" id="cpu-usage">0%</h2>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-primary" id="cpu-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Memory Usage -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card metric-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-memory metric-icon text-success"></i>
+                        <h5 class="card-title">Memory</h5>
+                        <h2 class="metric-value" id="memory-usage">0%</h2>
+                        <small class="text-muted" id="memory-details">0GB / 0GB</small>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-success" id="memory-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Disk Usage -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card metric-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-hdd metric-icon text-warning"></i>
+                        <h5 class="card-title">Disk</h5>
+                        <h2 class="metric-value" id="disk-usage">0%</h2>
+                        <small class="text-muted" id="disk-details">0GB / 0GB</small>
+                        <div class="progress mt-2">
+                            <div class="progress-bar bg-warning" id="disk-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Uptime -->
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="card metric-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-clock metric-icon text-info"></i>
+                        <h5 class="card-title">Uptime</h5>
+                        <h2 class="metric-value text-info" id="uptime">0d 0h 0m</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network -->
+            <div class="col-lg-4 col-md-8 col-sm-12">
+                <div class="card metric-card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-network-wired metric-icon text-danger"></i>
+                        <h5 class="card-title">Network Throughput</h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <h4 class="text-success mb-0" id="network-download">
+                                    <i class="fas fa-download me-1"></i>0 MB
+                                </h4>
+                                <small class="text-muted">Downloaded</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-danger mb-0" id="network-upload">
+                                    <i class="fas fa-upload me-1"></i>0 MB
+                                </h4>
+                                <small class="text-muted">Uploaded</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Processes -->
+        <div class="row g-3">
+            <!-- Top CPU Processes -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-microchip me-2"></i>
+                            Top Processes (CPU)
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>PID</th>
+                                        <th>CPU %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cpu-processes">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Memory Processes -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-memory me-2"></i>
+                            Top Processes (Memory)
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Process</th>
+                                        <th>PID</th>
+                                        <th>Memory %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="memory-processes">
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Refresh Button -->
+        <div class="text-center mt-4 mb-4">
+            <button class="btn btn-outline-primary" id="refresh-btn">
+                <i class="fas fa-sync-alt me-2"></i>Refresh Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="loading-overlay d-none">
+        <div class="text-center">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div>Loading metrics...</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
